@@ -16,11 +16,89 @@
         <span class="date"></span>
     </header>
     <main>
-        <h1>Create four groups of four!</h1>
-        <form>
-            <label for="c0r0"></label>
-            <input type="checkbox" id="c0r0" name="c0r0">
-        </form>
+        <div class="dateSelector">
+            <label for="selectDate">Select a date for the game you would like to play</label>
+            <input type="date" id="selectDate">
+        </div>
+        <div class="gameBoard">
+            <span class="gameHeading">Create four groups of four!</span>
+            <form>
+                <div class="connectionsGrid">
+                    <div class="tile">
+                        <input type="checkbox" id="word0" name="word0">
+                        <label for="word0">Word 1</label>
+                    </div>
+                    <div class="tile">
+                        <input type="checkbox" id="word1" name="word1">
+                        <label for="word1">Word 2</label>
+                    </div>
+                    <div class="tile">
+                        <input type="checkbox" id="word2" name="word2">
+                        <label for="word2">Word 3</label>
+                    </div>
+                    <div class="tile">
+                        <input type="checkbox" id="word3" name="word3">
+                        <label for="word3">Word 4</label>
+                    </div>
+
+                    <div class="tile">
+                        <input type="checkbox" id="word4" name="word4">
+                        <label for="word4">Word 5</label>
+                    </div>
+                    <div class="tile">
+                        <input type="checkbox" id="word5" name="word5">
+                        <label for="word5">Word 6</label>
+                    </div>
+                    <div class="tile">
+                        <input type="checkbox" id="word6" name="word6">
+                        <label for="word6">Word 7</label>
+                    </div>
+                    <div class="tile">
+                        <input type="checkbox" id="word7" name="word7">
+                        <label for="word7">Word 8</label>
+                    </div>
+
+                    <div class="tile">
+                        <input type="checkbox" id="word8" name="word8">
+                        <label for="word8">Word 9</label>
+                    </div>
+                    <div class="tile">
+                        <input type="checkbox" id="word9" name="word9">
+                        <label for="word9">Word 10</label>
+                    </div>
+                    <div class="tile">
+                        <input type="checkbox" id="word10" name="word10">
+                        <label for="word10">Word 11</label>
+                    </div>
+                    <div class="tile">
+                        <input type="checkbox" id="word11" name="word11">
+                        <label for="word11">Word 12</label>
+                    </div>
+
+                    <div class="tile">
+                        <input type="checkbox" id="word12" name="word12">
+                        <label for="word12">Word 13</label>
+                    </div>
+                    <div class="tile">
+                        <input type="checkbox" id="word13" name="word13">
+                        <label for="word13">Word 14</label>
+                    </div>
+                    <div class="tile">
+                        <input type="checkbox" id="word14" name="word14">
+                        <label for="word14">Word 15</label>
+                    </div>
+                    <div class="tile">
+                        <input type="checkbox" id="word15" name="word15">
+                        <label for="word15">Word 16</label>
+                    </div>
+                </div>
+                <div class="connectionsButtons">
+                    <button type="button" id="shuffle">Shuffle</button>
+                    <button type="button" id="deselect">Deselect All</button>
+                    <button type="submit" disabled>Submit</button>
+                </div>
+            </form>
+        </div>
     </main>
 </body>
 </html>

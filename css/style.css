@@ -1,3 +1,7 @@
+html {
+    font-size: 14px;
+}
+
 body {
     margin: 0;
     font-family: "Fira Sans", sans-serif;
@@ -7,19 +11,45 @@ body {
 
 header {
     background-color: lightblue;
-    padding: 10px 20px;
+    padding: 0.625rem 1.25rem;
     display: flex;
     font-weight: 700;
     justify-content: space-between;
     position: sticky;
     top: 0;
+    z-index: 100;
+    font-size: 2rem;
 }
 
 main {
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-direction: column;
     width: auto;
+    padding: 0.625rem;
+}
+
+.dateSelector {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.625rem;
+}
+
+.gameBoard {
+    width: 100%;
+    max-width: 800px;
+    font-size: 1.5rem;
+    border: solid 1px;
+    background-color: #fbfbf7;
+}
+
+.gameHeading {
+    display: block;
+    text-align: center;
+    font-size: 2rem;
 }
 
 .title {
@@ -30,4 +60,60 @@ main {
 .date {
     text-align: initial;
     display: block;
+}
+
+.connectionsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 1.25rem;
+}
+
+.tile {
+    position: relative;
+}
+
+.tile input {
+    appearance: none;
+    display: block;
+    margin: 0;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    background-color: #e1e1d4;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.tile input:checked {
+    background-color: #5a594e;
+}
+
+.tile label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.25rem;
+    font-weight: 700;
+    pointer-events: none;
+    padding: 2rem;
+}
+
+.tile input:checked + label {
+    color: white;
+}
+
+.connectionsButtons {
+    display: flex;
+    justify-content: center;
+}
+
+.connectionsButtons button {
+    font-size: 1.5rem;
+    padding: 0.5rem 2rem;
+    border-radius: 9999999px;
+    margin: 1rem;
+
 }
