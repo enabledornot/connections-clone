@@ -197,7 +197,7 @@ form.addEventListener("change", updateSubmit);
 
 const grid = form.querySelector(".connectionsGrid");
 
-document.querySelector("#shuffle").addEventListener("click", shuffleBoard());
+document.querySelector("#shuffle").addEventListener("click", shuffleBoard);
 function shuffleBoard() {
     const tiles = [];
     for (const tile of grid.children) {
