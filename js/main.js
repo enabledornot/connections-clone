@@ -169,6 +169,9 @@ function guessSuccess(group) {
 function guessFailure() {
     console.log("guess failure");
     guesses += 1;
+    if(guesses >= MAX_GUESSES) {
+        alert("WRONG! Thank you for playing");
+    }
     deselectAll();
     reRenderGuesses();
 }
