@@ -21,6 +21,7 @@ async function updateBoard() {
             label.textContent = card.content;
         }
     }
+    unShuffleBoard();
 }
 
 const form = document.querySelector("form");
@@ -47,7 +48,8 @@ form.addEventListener("change", updateSubmit);
 
 const grid = form.querySelector(".connectionsGrid");
 
-document.querySelector("#shuffle").addEventListener("click", () => {
+document.querySelector("#shuffle").addEventListener("click", shuffleBoard());
+function shuffleBoard() {
     const tiles = [];
     for (const tile of grid.children) {
         tiles.push(tile);
@@ -61,7 +63,14 @@ document.querySelector("#shuffle").addEventListener("click", () => {
     for (let i = 0; i < tiles.length; i++) {
         grid.appendChild(tiles[i]);
     }
-});
+}
+
+function unShuffleBoard() {
+    for (let i = 0; i < 16; i++) {
+        const cellDiv = document.querySelector(`#word${i}`).parentElement;
+        grid.appendChild(cellDiv);
+    }
+}
 
 document.querySelector("#deselect").addEventListener("click", () => {
     checked = form.querySelectorAll(".connectionsGrid input");
