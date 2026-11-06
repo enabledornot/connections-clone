@@ -1,0 +1,25 @@
+{
+  "name": "connections-clone",
+  "version": "1.0.0",
+  "description": "This is intended to be a clone of the popular NYT game connections.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enabledornot/connections-clone.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/enabledornot/connections-clone/issues"
+  },
+  "homepage": "https://github.com/enabledornot/connections-clone#readme",
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}
