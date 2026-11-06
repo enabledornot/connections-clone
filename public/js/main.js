@@ -11,11 +11,25 @@ const gameDate = document.querySelector("#selectDate");
 // gameDate.value = new Date().toLocaleDateString("en-CA");
 gameDate.addEventListener("change", updateBoard);
 
+async function makeAPIRequest(endpoint, headers) {
+    try {
+        const response = await fetch(endpoint, { headers });
+        if (response.status === 404) {
+            console.log(await response.json());
+            return;
+        }
+        return await response.json();
+    }
+    catch (err) {
+        console.log(err);
+        return;
+    }
+}
+
 async function updateBoard() {
     resetGame();
     const selectedDate = gameDate.value;
     guesses = 0;
-    let data;
     let url;
     if (selectedDate) {
         url = `/api/fetch_board?date=${encodeURIComponent(selectedDate)}`;
@@ -23,18 +37,10 @@ async function updateBoard() {
     else {
         url = '/api/fetch_board';
     }
-    try {
-        const response = await fetch(url);
-        if (response.status === 404) {
-            console.log(response.json());
-            return;
-        }
-        data = await response.json();
-    }
-    catch (err) {
-        console.log(err);
+    const data = await makeAPIRequest(url);
+    if (!data) {
         return;
-    } 
+    }
     current_data = data;
     for (const category of data.categories) {
         for (const card of category.cards) {
@@ -50,6 +56,7 @@ const submit = form.querySelector("button[type=submit]");
 
 
 form.addEventListener("submit", (event) => {
+    // stops form submit
     event.preventDefault();
 
     const selectedCheckboxes = form.querySelectorAll("input[type=checkbox]:checked");
@@ -61,24 +68,27 @@ form.addEventListener("submit", (event) => {
     }
     let selected = [];
     for(let child of selectedCheckboxes) {
-        const label = form.querySelector(`label[for='${child.id}']`);
-        selected.push(label.textContent.toUpperCase());
+        selected.push(parseInt(child.id.slice(4), 10));
     }
-
-    selected.sort();
-    for(let group of current_data.categories) {
-        let success = true;
-        for(let i = 0; i < 4; i++) {
-            if (group.cards[i].content !== selected[i]) {
-                success = false;
-                break;
-            } 
-        }
-        if(success) {
-            guessSuccess(group.title);
-            return;
-        }
+    let response = makeAPIRequest(`/api/submit_guess?guesses=${encodeURIComponent(selected)}`);
+    if (!response) {
+        return;
     }
+    // selected.sort();
+    // for(let group of current_data.categories) {
+    //     let success = true;
+    //     for(let i = 0; i < 4; i++) {
+    //         if (group.cards[i].content !== selected[i]) {
+    //             success = false;
+    //             break;
+    //         } 
+    //     }
+    //     if(success) {
+    //         guessSuccess(group.title);
+    //         return;
+    //     }
+    // }
+    // guessSuccess(TITLE);
     guessFailure();
 });
 

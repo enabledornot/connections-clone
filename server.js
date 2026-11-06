@@ -131,6 +131,9 @@ app.get('/api/fetch_board', async (req, res) => {
 
 });
 
+app.get('/api/submit_guess', (req, res) => {
+    console.log(req.body);
+})
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
