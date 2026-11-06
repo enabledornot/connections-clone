@@ -1,94 +1,3 @@
-// DATA
-let default_pattern = {
-    "print_date": "2026-10-26",
-    "categories": [
-        {
-            "title": "RESPONSES TO \"HOW ARE YOU?\"",
-            "cards": [
-                {
-                    "content": "CHILLING",
-                    "position": 2
-                },
-                {
-                    "content": "MANAGING",
-                    "position": 10
-                },
-                {
-                    "content": "NOT BAD",
-                    "position": 15
-                },
-                {
-                    "content": "SAME OLD",
-                    "position": 12
-                }
-            ]
-        },
-        {
-            "title": "KINDS OF MATS",
-            "cards": [
-                {
-                    "content": "PRAYER",
-                    "position": 7
-                },
-                {
-                    "content": "WELCOME",
-                    "position": 0
-                },
-                {
-                    "content": "WRESTLING",
-                    "position": 11
-                },
-                {
-                    "content": "YOGA",
-                    "position": 4
-                }
-            ]
-        },
-        {
-            "title": "AKC DOG BREED GROUPS",
-            "cards": [
-                {
-                    "content": "HERDING",
-                    "position": 14
-                },
-                {
-                    "content": "HOUND",
-                    "position": 9
-                },
-                {
-                    "content": "SPORTING",
-                    "position": 6
-                },
-                {
-                    "content": "TOY",
-                    "position": 3
-                }
-            ]
-        },
-        {
-            "title": "HORROR MOVIES WITH LAST LETTER CHANGED",
-            "cards": [
-                {
-                    "content": "HALLOWEEK",
-                    "position": 1
-                },
-                {
-                    "content": "HOSTED",
-                    "position": 13
-                },
-                {
-                    "content": "JAWN",
-                    "position": 5
-                },
-                {
-                    "content": "PSYCHS",
-                    "position": 8
-                }
-            ]
-        }
-    ]
-}
-
 let current_data;
 let guesses = 0;
 const MAX_GUESSES = 4;
@@ -107,14 +16,25 @@ async function updateBoard() {
     const selectedDate = gameDate.value;
     guesses = 0;
     let data;
+    let url;
     if (selectedDate) {
-        const url = `https://www.nytimes.com/svc/connections/v2/${selectedDate}.json`;
-        const response = await fetch(`https://proxy.cors.dev/${encodeURIComponent(url)}`);
-        data = await response.json();
+        url = `/api/fetch_board?date=${encodeURIComponent(selectedDate)}`;
     }
     else {
-        data = default_pattern;
+        url = '/api/fetch_board';
     }
+    try {
+        const response = await fetch(url);
+        if (response.status === 404) {
+            console.log(response.json());
+            return;
+        }
+        data = await response.json();
+    }
+    catch (err) {
+        console.log(err);
+        return;
+    } 
     current_data = data;
     for (const category of data.categories) {
         for (const card of category.cards) {
