@@ -120,6 +120,16 @@ async function getBoard(date) {
     return pattern;
 }
 
+function convertBoard(pattern) {
+    let board = [null]*16;
+    for(cat of pattern['categories']) {
+        for(card of cat['cards']) {
+            board[card['position']] = card['content'];
+        }
+    }
+    return board;
+}
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -140,7 +150,7 @@ app.get('/api/fetch_board', async (req, res) => {
 
     try {
         const pattern = await getBoard(date);
-        return res.json(pattern);
+        return res.json(convertBoard(pattern));
     }
     catch (err) {
         console.log(`request error for ${date}`);

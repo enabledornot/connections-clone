@@ -1,4 +1,4 @@
-let current_data;
+// let current_data;
 let guesses = 0;
 const MAX_GUESSES = 4;
 const date = document.querySelector(".date");
@@ -42,12 +42,10 @@ async function updateBoard() {
     if (!data) {
         return;
     }
-    current_data = data;
-    for (const category of data.categories) {
-        for (const card of category.cards) {
-            const label = document.querySelector(`label[for='word${card.position}']`);
-            label.textContent = card.content;
-        }
+    // current_data = data;
+    for(let i = 0; i < 16; i++) {
+        const label = document.querySelector(`label[for='word${i}']`);
+        label.textContent = data[i];        
     }
     unShuffleBoard();
 }
