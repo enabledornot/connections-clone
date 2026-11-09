@@ -11,14 +11,15 @@ const gameDate = document.querySelector("#selectDate");
 // gameDate.value = new Date().toLocaleDateString("en-CA");
 gameDate.addEventListener("change", updateBoard);
 
-async function makeAPIRequest(endpoint, headers) {
+async function makeAPIRequest(endpoint, options = {}) {
     try {
-        const response = await fetch(endpoint, { headers });
-        if (response.status === 404) {
-            console.log(await response.json());
+        const response = await fetch(endpoint, options);
+        const data = await response.json();
+        if (!response.ok) {
+            console.log(data);
             return;
         }
-        return await response.json();
+        return data;
     }
     catch (err) {
         console.log(err);
@@ -55,7 +56,7 @@ const form = document.querySelector("form");
 const submit = form.querySelector("button[type=submit]");
 
 
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
     // stops form submit
     event.preventDefault();
 
@@ -70,10 +71,11 @@ form.addEventListener("submit", (event) => {
     for(let child of selectedCheckboxes) {
         selected.push(parseInt(child.id.slice(4), 10));
     }
-    let response = makeAPIRequest(`/api/submit_guess?guesses=${encodeURIComponent(selected)}`);
+    const response = await makeAPIRequest('/api/submit_guess', {method: 'POST',headers: { 'Content-Type': 'application/json' },body: JSON.stringify({ date: gameDate.value, guesses: selected })});
     if (!response) {
         return;
     }
+    handleGuess(response, selected);
     // selected.sort();
     // for(let group of current_data.categories) {
     //     let success = true;
@@ -89,8 +91,25 @@ form.addEventListener("submit", (event) => {
     //     }
     // }
     // guessSuccess(TITLE);
-    guessFailure();
+    // guessFailure();
 });
+
+function handleGuess(response, guesses) {
+    if(response['result'] === "success") {
+        const groupLabel = document.querySelector(`#group${response['groupId']}`);
+        groupLabel.textContent = response['category'];
+        groupLabel.parentElement.style.display = "flex";
+
+        for(guess of guesses) {
+            const divParent = document.querySelector(`label[for='word${guess}']`).parentNode;
+            divParent.style.display = "none";
+        }
+        deselectAll();
+    }
+    else {
+        guessFailure();
+    }
+}
 
 function guessSuccess(group) {
     alert(`guess ${group} success`);

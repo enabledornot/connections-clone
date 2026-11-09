@@ -73,6 +73,25 @@ main {
     position: relative;
 }
 
+.group {
+    display: none;
+    grid-column: 1 / -1;
+    min-height: 5rem;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    background-color: #e1e1d4;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+.group p {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+}
+
 .tile input {
     appearance: none;
     display: block;

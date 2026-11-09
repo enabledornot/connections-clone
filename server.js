@@ -91,6 +91,35 @@ let default_pattern = {
     ]
 }
 
+let patternsCache = {};
+
+async function getBoard(date) {
+    if (!date) {
+        return default_pattern;
+    }
+
+    if (patternsCache[date]) {
+        return patternsCache[date];
+    }
+
+    const requestUrl = `https://www.nytimes.com/svc/connections/v2/${date}.json`;
+    const response = await fetch(requestUrl);
+    if (response.status === 404) {
+        const error = new Error(`no board found for ${date}`);
+        error.status = 404;
+        throw error;
+    }
+    if (!response.ok) {
+        const error = new Error('cannot fetch from NYT');
+        error.status = 502;
+        throw error;
+    }
+
+    const pattern = await response.json();
+    patternsCache[date] = pattern;
+    return pattern;
+}
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -105,35 +134,50 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.get('/api/fetch_board', async (req, res) => {
     const { date } = req.query;
-    let pattern;
-    if (!date) {
-        pattern = default_pattern;
+    if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        return res.status(400).json({ error: 'invalid date format. Use YYYY-MM-DD' });
     }
-    else if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-        return res.status(400).json({"error": "invalid date format. Use YYYY-MM-DD"});
-    }
-    else {
-        req_url = `https://www.nytimes.com/svc/connections/v2/${date}.json`;
-        try {
-            const response = await fetch(req_url);
-            if (response.status === 404) {
-                return res.status(404).json({"error": `no board found for ${date}`});
-            }
-            pattern = await response.json();
-        }
-        catch (err) {
-            console.log(`request error for ${req_url}`);
-            return res.status(502).json({"error": "cannot fetch from NYT"});
-        }
 
+    try {
+        const pattern = await getBoard(date);
+        return res.json(pattern);
     }
-    return res.json(pattern);
+    catch (err) {
+        console.log(`request error for ${date}`);
+        return res.status(err.status || 502).json({ error: err.message || 'cannot fetch from NYT' });
+    }
 
 });
 
-app.get('/api/submit_guess', (req, res) => {
-    console.log(req.body);
-})
+async function processGuess(date, guesses) {
+    const board = await getBoard(date);
+    for (let groupId = 0; groupId < board['categories'].length; groupId++) {
+        const cat = board['categories'][groupId];
+        let valid = true;
+        for(card of cat['cards']) {
+            if (!guesses.includes(card['position'])) {
+                valid = false;
+            }
+        }
+        if (valid) {
+            return {"result": "success", "category": cat['title'], "groupId": groupId};
+        }
+    }
+    return {"result": "failure"};
+}
+
+app.post('/api/submit_guess', async (req, res) => {
+    const { date, guesses } = req.body;
+    if (guesses.length !== 4) {
+        return res.status(400).json({"error": "must be exactly 4 guesses"});
+    }
+    for(guess of guesses) {
+        if (!Number.isInteger(guess)) {
+            return res.status(400).json({"error": "guess not integer value"})
+        }
+    }
+    return res.json(await processGuess(date, guesses));
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
