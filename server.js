@@ -121,7 +121,7 @@ async function getBoard(date) {
 }
 
 function convertBoard(pattern) {
-    let board = [null]*16;
+    let board = Array(16).fill(null);
     for(cat of pattern['categories']) {
         for(card of cat['cards']) {
             board[card['position']] = card['content'];
@@ -192,3 +192,4 @@ app.post('/api/submit_guess', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+

@@ -2,6 +2,7 @@
 let guesses = 0;
 const MAX_GUESSES = 4;
 const date = document.querySelector(".date");
+let successCount = 0;
 
 setInterval(() => {
     date.textContent = new Date().toLocaleString();
@@ -103,14 +104,14 @@ function handleGuess(response, guesses) {
             divParent.style.display = "none";
         }
         deselectAll();
+        successCount += 1;
+        if (successCount === 4) {
+            alert("Congrats you won!");
+        }
     }
     else {
         guessFailure();
     }
-}
-
-function guessSuccess(group) {
-    alert(`guess ${group} success`);
 }
 
 function guessFailure() {
@@ -148,11 +149,11 @@ form.addEventListener("change", updateSubmit);
 const grid = form.querySelector(".connectionsGrid");
 
 document.querySelector("#shuffle").addEventListener("click", shuffleBoard);
+
+
 function shuffleBoard() {
     const tiles = [];
-    for (const tile of grid.children) {
-        tiles.push(tile);
-    }
+    for(tile of grid.querySelectorAll('.tile')) tiles.push(tile);
     for (let i = tiles.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         const tmp = tiles[i];
@@ -181,13 +182,19 @@ function deselectAll() {
     updateSubmit();
 }
 
+function resetHidden() {
+    for(tile of document.querySelectorAll('.tile')) tile.style.display = "flex";
+    for(group of document.querySelectorAll('.group')) group.style.display = "none";
+}
 
 document.querySelector("#resetButton").addEventListener("click", resetGame)
 
 function resetGame() {
     guesses = 0;
+    successCount = 0;
     reRenderGuesses();
     deselectAll();
+    resetHidden();
 }
 
 updateBoard();
